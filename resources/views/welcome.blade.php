@@ -21,27 +21,9 @@
 <body>
     <div class="content">
         <div id="app">
-            <v-app>
-                <v-main>
-                    <v-container>
-                        {{-- <v-btn color="primary" elevation="3" large>
-                            <hola-mundo  message="Click"></hola-mundo>
-                        </v-btn>
-                        <form-text></form-text> --}}
-                        <form-test label="lbl test"></form-test>
-                    </v-container>
-
-                </v-main>
-            </v-app>
-
+            <App />
         </div>
     </div>
-
-    {{-- <script src="https://unpkg.com/vue@next"></script> --}}
-    {{-- <script src="https://unpkg.com/vue-router@4"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
-    <script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.min.js"></script> --}}
 
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
