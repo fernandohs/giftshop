@@ -34,6 +34,8 @@ Route::group(['middleware' => ['cors', 'auth:sanctum', 'token.lifetime']], funct
     Route::get('test', function () {
         return response()->json('OK', 200);
     });
+
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 
