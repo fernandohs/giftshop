@@ -23,11 +23,17 @@
         <div id="app">
             <v-app>
                 <v-main>
-                    <v-container><v-btn color="primary" elevation="3" large>Click</v-btn></v-container>
-                    
+                    <v-container>
+                        {{-- <v-btn color="primary" elevation="3" large>
+                            <hola-mundo  message="Click"></hola-mundo>
+                        </v-btn>
+                        <form-text></form-text> --}}
+                        <form-test label="lbl test"></form-test>
+                    </v-container>
+
                 </v-main>
             </v-app>
-            
+
         </div>
     </div>
 
@@ -40,17 +46,7 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="https://unpkg.com/vue-router"></script>
-    <script>
-        Vue.config.productionTip = false
-        new Vue({
-            el: '#app',
-            vuetify: new Vuetify(),
-        })
-
-        // Vue.createApp(Counter).mount('#counter')
-
-    </script>
-
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 
 </html>
