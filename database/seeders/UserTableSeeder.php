@@ -20,6 +20,13 @@ class UserTableSeeder extends Seeder
                 'name' => 'administrator',
                 'email' => 'admin@mail.com',
                 'password' => bcrypt("admin"),
+                'birth_date' => '1990-08-11',
+                'phone' => '6623667235',
+                'city' => 'Hermosillo',
+                'state' => 'Sonora',
+                'street' => 'Rio de plata',
+                'zip_code' => '83175',
+                'is_admin' => 1
             ],
         ]);
     }
