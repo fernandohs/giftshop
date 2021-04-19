@@ -24,10 +24,10 @@
             <App />
         </div>
     </div>
-
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="https://unpkg.com/vue-router"></script>
+    
     <script src="{{ mix('js/app.js') }}"></script>
 </body>
 
