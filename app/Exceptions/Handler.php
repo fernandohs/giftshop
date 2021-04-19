@@ -97,6 +97,7 @@ class Handler extends ExceptionHandler
                 $response['errors'] = $exception->original['errors'];
                 break;
             default:
+            dd($exception->getMessage(), $exception->getLine());
                 $response['message'] = ($statusCode === 500) ? 'Whoops, looks like something went wrong' : $exception->getMessage();
                 break;
         }

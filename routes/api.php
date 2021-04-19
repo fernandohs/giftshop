@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -27,9 +28,9 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['middleware' => ['cors', 'auth:sanctum', 'token.lifetime']], function () {
 
-    Route::get('user', function(){
-        return \Auth::user();
-    });
+    // Route::get('user', function(){
+    //     return \Auth::user();
+    // });
 
     Route::get('test', function () {
         return response()->json('OK', 200);
@@ -37,6 +38,10 @@ Route::group(['middleware' => ['cors', 'auth:sanctum', 'token.lifetime']], funct
 
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+
+Route::resource('user', UserController::class);
 
 
 // Route::post('/login', 'AuthController@login')->middleware('cors');
