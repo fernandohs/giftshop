@@ -1,5 +1,5 @@
 # giftshop
 
-Credencial default:
-user:admin@mail.com
-passwor:admin
+Credencial default:</br>
+user:admin@mail.com </br>
+password:admin
