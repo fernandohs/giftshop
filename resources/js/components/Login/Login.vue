@@ -74,7 +74,7 @@ export default {
 
       window.axios.get("/sanctum/csrf-cookie").then((response) => {
         window.axios
-          .post("http://giftshop.test/api/login", {
+          .post("/api/login", {
             email: this.form.email,
             password: this.form.password,
           })
