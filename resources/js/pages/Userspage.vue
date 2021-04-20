@@ -3,6 +3,10 @@
     <v-col lg="12" class="mt-3 mb-3">
       <h1>Users</h1>
       <p>Description</p>
+      <user-modal 
+        v-bind:userIndex="editedIndex"
+        v-bind:userEdit="editedItem"
+        ></user-modal>
     </v-col>
 
     <v-col lg="12" class="mt-3 mb-3">
@@ -13,7 +17,7 @@
           sort-by="name"
           class="elevation-1"
         >
-          <template v-slot:top>
+          <!-- <template v-slot:top>
             <v-toolbar flat>
               <v-toolbar-title>Users Table</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
@@ -42,13 +46,7 @@
                           <v-text-field
                             v-model="editedItem.name"
                             label="Name"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.last_name"
-                            label="Last Name"
+                            prepend-icon="mdi-account"
                           ></v-text-field>
                         </v-col>
 
@@ -56,20 +54,44 @@
                           <v-text-field
                             v-model="editedItem.email"
                             label="Email"
+                            prepend-icon="email"
                           ></v-text-field>
                         </v-col>
 
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.user_type"
-                            label="User Type"
-                          ></v-text-field>
+                          <v-menu
+                            ref="menu"
+                            v-model="menu"
+                            :close-on-content-click="false"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="auto"
+                          >
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-text-field
+                                v-model="editedItem.birth_date"
+                                label="Birthday date"
+                                prepend-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                              ></v-text-field>
+                            </template>
+                            <v-date-picker
+                              ref="picker"
+                              v-model="editedItem.birth_date"
+                              :max="new Date().toISOString().substr(0, 10)"
+                              min="1950-01-01"
+                              @change="saveDate"
+                            ></v-date-picker>
+                          </v-menu>
                         </v-col>
 
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedItem.phone"
                             label="Phone"
+                            prepend-icon="phone"
                           ></v-text-field>
                         </v-col>
 
@@ -77,6 +99,7 @@
                           <v-text-field
                             v-model="editedItem.city"
                             label="City"
+                            prepend-icon="mdi-map-marker"
                           ></v-text-field>
                         </v-col>
 
@@ -84,6 +107,7 @@
                           <v-text-field
                             v-model="editedItem.state"
                             label="State"
+                            prepend-icon="mdi-map-marker"
                           ></v-text-field>
                         </v-col>
 
@@ -91,6 +115,16 @@
                           <v-text-field
                             v-model="editedItem.street"
                             label="Street"
+                            prepend-icon="domain"
+                          ></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field
+                            v-model="editedItem.password"
+                            label="Password"
+                            type="password"
+                            prepend-icon="lock"
                           ></v-text-field>
                         </v-col>
                       </v-row>
@@ -99,11 +133,11 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="error darken-1" @click="close">
-                      Cancel
+                    <v-btn fab color="error darken-1" @click="close">
+                      <v-icon dark> mdi-close </v-icon>
                     </v-btn>
-                    <v-btn color="success darken-1" @click="save">
-                      Save
+                    <v-btn fab color="success darken-1" @click="save">
+                      <v-icon dark> mdi-floppy </v-icon>
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -128,6 +162,7 @@
               </v-dialog>
             </v-toolbar>
           </template>
+           -->
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
@@ -147,10 +182,26 @@
 </template> 
 
 <script>
+import User from "../components/User";
+
 export default {
+  mounted() {
+    axios
+      .get("/api/user")
+      .then((response) => {
+        this.users = response.data;
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  },
+  components: {
+    'user-modal': User,
+  },
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    menu: false,
     headers: [
       {
         text: "Name",
@@ -158,9 +209,8 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Last Name", value: "last_name" },
       { text: "Email", value: "email" },
-      { text: "User Type", value: "user_type" },
+      { text: "Is Admin", value: "is_admin" },
       { text: "Phone", value: "phone" },
       { text: "City", value: "city" },
       { text: "State", value: "state" },
@@ -171,18 +221,18 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
-      last_name: "",
+      birth_date: null,
       email: "",
-      user_type: "",
       phone: "",
       city: "",
       state: "",
       street: "",
       zip_code: "",
+      password: "",
     },
     defaultItem: {
       name: "",
-      last_name: "",
+      birth_date: null,
       email: "",
       user_type: "",
       phone: "",
@@ -190,6 +240,7 @@ export default {
       state: "",
       street: "",
       zip_code: "",
+      password: "",
     },
   }),
 
@@ -200,6 +251,9 @@ export default {
   },
 
   watch: {
+    menu(val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
+    },
     dialog(val) {
       val || this.close();
     },
@@ -214,25 +268,15 @@ export default {
 
   methods: {
     initialize() {
-      this.users = [
-        {
-          name: "Fernando",
-          last_name: "Herrera Sanchez",
-          email: "fernandohs@live.com.mx",
-          user_type: "Admin",
-          phone: "6623667235",
-          city: "Hermosillo",
-          state: "Sonora",
-          street: "Rio de Plata",
-          zip_code: "83175",
-        },
-      ];
+      this.users = [];
     },
 
     editItem(item) {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+
+      // aqui va
     },
 
     deleteItem(item) {
@@ -261,14 +305,18 @@ export default {
         this.editedIndex = -1;
       });
     },
+    saveDate(date) {
+      console.log(this.editedItem.birth_date);
+      this.$refs.menu.save(date);
+    },
 
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.users[this.editedIndex], this.editedItem);
-        console.log('UPDATE')
+        console.log("UPDATE");
       } else {
-        this.users.push(this.editedItem);
-        console.log('ADD')
+        this.users.push(this.editedItem.birth_date);
+        console.log("ADD");
       }
       this.close();
     },
