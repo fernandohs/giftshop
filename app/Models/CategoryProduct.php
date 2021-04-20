@@ -10,6 +10,7 @@ class CategoryProduct extends Model
     use HasFactory;
 
 
+    protected $table="categories_products";
     /**
      * The attributes that are mass assignable.
      *
@@ -33,11 +34,11 @@ class CategoryProduct extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class);
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class);
     }
 }

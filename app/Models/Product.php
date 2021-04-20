@@ -40,4 +40,8 @@ class Product extends Model
     {
         return $this->hasMany(CategoryProduct::class, 'product_id', 'id');
     }
+
+    public function getCategoryRelationship(){
+        return new CategoryProduct;
+    }
 }

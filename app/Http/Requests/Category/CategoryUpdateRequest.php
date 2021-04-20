@@ -33,7 +33,7 @@ class CategoryUpdateRequest extends FormRequest
     {
         return [
             "id"          => ['required', 'exists:categories,id'],
-            "name"        => ['required', 'unique:category,name,' . $this->id . ",id"],
+            "name"        => ['required', 'unique:categories,name,' . $this->id . ",id"],
             "description" => ['required'],
 
         ];

@@ -43,5 +43,7 @@ class ProductAllRequest extends FormRequest
     {
         throw new HttpResponseException(
             response()->json(["messages" => $validator->errors(), "status" => 500], 500)
+        );
+    }
         
 }

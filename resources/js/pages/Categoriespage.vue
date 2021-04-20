@@ -2,20 +2,20 @@
   <v-row>
     <loader :is-visible="isLoading"></loader>
     <v-col lg="12" class="mt-3 mb-3">
-      <h1>Products</h1>
+      <h1>Categories of products</h1>
       <p>Description</p>
-      <product-modal
-        v-bind:productIndex="editedIndex"
-        v-bind:productEdit="editedItem"
+      <category-modal
+        v-bind:categoryIndex="editedIndex"
+        v-bind:categoryEdit="editedItem"
         @created="handleCreate"
-      ></product-modal>
+      ></category-modal>
     </v-col>
 
     <v-col lg="12" class="mt-3 mb-3">
       <template>
         <v-data-table
           :headers="headers"
-          :items="products"
+          :items="categories"
           sort-by="name"
           class="elevation-1"
         >
@@ -38,17 +38,17 @@
 </template> 
 
 <script>
-import Product from "../components/Product";
+import Category from "../components/Category";
 import Loader from "../components/Loader";
 
 export default {
   mounted() {
     this.isLoading = true;
-
+    
     window.axios
-      .get("/api/product")
+      .get("/api/category")
       .then((response) => {
-        this.products = response.data;
+        this.categories = response.data;
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -57,10 +57,8 @@ export default {
         this.isLoading = false;
       });
   },
-
-
   components: {
-    "product-modal": Product,
+    "category-modal": Category,
     loader: Loader,
   },
   data: () => ({
@@ -75,26 +73,18 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Price", value: "price" },
-      { text: "Stock", value: "stock" },
       { text: "Description", value: "description" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    products: [],
+    categories: [],
     editedIndex: -1,
     editedItem: {
       name: "",
       description: "",
-      url_image: "",
-      price: 0.0,
-      stock: 0,
     },
     defaultItem: {
       name: "",
       description: "",
-      url_image: "",
-      price: 0.0,
-      stock: 0,
     },
   }),
 
@@ -113,14 +103,14 @@ export default {
 
   methods: {
     initialize() {
-      this.products = [];
+      this.categories = [];
     },
     handleCreate() {
       this.editedIndex = -1;
     },
 
     editItem(item) {
-      this.editedIndex = this.products.indexOf(item);
+      this.editedIndex = this.categories.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
 
@@ -128,13 +118,13 @@ export default {
     },
 
     deleteItem(item) {
-      this.editedIndex = this.products.indexOf(item);
+      this.editedIndex = this.categories.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.products.splice(this.editedIndex, 1);
+      this.categories.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -152,6 +142,21 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+    saveDate(date) {
+      console.log(this.editedItem.birth_date);
+      this.$refs.menu.save(date);
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.categories[this.editedIndex], this.editedItem);
+        console.log("UPDATE");
+      } else {
+        this.categories.push(this.editedItem.birth_date);
+        console.log("ADD");
+      }
+      this.close();
     },
   },
 };

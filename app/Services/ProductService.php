@@ -14,7 +14,9 @@ class ProductService implements IServices{
     }
 
     public function add($request){
-        return $this->repository->create($request);
+        $categories = $request['categories'];
+        unset($request['categories']);
+        return $this->repository->createWithCategories($request, $categories);
     }
 
     public function update(Array $request, int $id){
@@ -22,11 +24,11 @@ class ProductService implements IServices{
     }
     
     public function all($request, $trashed){
-        return $this->repository->all($request, $trashed);
+        return $this->repository->allWithCategories($request, $trashed);
     }
 
     public function find($request, $id){
-        return $this->repository->find($id, $request['trashed']);
+        return $this->repository->findWithCategories($id, $request['trashed']);
     }
 
     public function delete($id){

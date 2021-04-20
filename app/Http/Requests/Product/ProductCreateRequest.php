@@ -26,11 +26,13 @@ class ProductCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"        => ['required',],
-            "description" => ['nullable'],
-            "url_image"   => ['nullable'],
-            "price"       => ['required'],
-            "stock"       => ['required'],
+            "name"         => ['required',],
+            "description"  => ['nullable'],
+            "url_image"    => ['nullable'],
+            "price"        => ['required', 'numeric'],
+            "stock"        => ['required', 'numeric'],
+            "categories"   => ['nullable', 'array'],
+            "categories.*" => ['nullable', 'numeric', 'exists:categories,id']
         ];
     }
 

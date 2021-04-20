@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" max-width="800px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-        Alone Add User
+        Add User
       </v-btn>
     </template>
     <v-card>
