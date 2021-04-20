@@ -23,6 +23,7 @@
         <div id="app">
             <App />
         </div>
+        
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>

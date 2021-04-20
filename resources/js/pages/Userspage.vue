@@ -1,12 +1,15 @@
 <template>
   <v-row>
+    <loader :is-visible="isLoading"></loader>
+
     <v-col lg="12" class="mt-3 mb-3">
       <h1>Users</h1>
       <p>Description</p>
-      <user-modal 
+      <user-modal
         v-bind:userIndex="editedIndex"
         v-bind:userEdit="editedItem"
-        ></user-modal>
+        @created="handleCreate"
+      ></user-modal>
     </v-col>
 
     <v-col lg="12" class="mt-3 mb-3">
@@ -17,152 +20,6 @@
           sort-by="name"
           class="elevation-1"
         >
-          <!-- <template v-slot:top>
-            <v-toolbar flat>
-              <v-toolbar-title>Users Table</v-toolbar-title>
-              <v-divider class="mx-4" inset vertical></v-divider>
-              <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="800px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    Add User
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                  </v-card-title>
-
-                  <v-card-text>
-                    <v-container>
-                      <v-row>
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.name"
-                            label="Name"
-                            prepend-icon="mdi-account"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.email"
-                            label="Email"
-                            prepend-icon="email"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                          >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="editedItem.birth_date"
-                                label="Birthday date"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                v-bind="attrs"
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker
-                              ref="picker"
-                              v-model="editedItem.birth_date"
-                              :max="new Date().toISOString().substr(0, 10)"
-                              min="1950-01-01"
-                              @change="saveDate"
-                            ></v-date-picker>
-                          </v-menu>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.phone"
-                            label="Phone"
-                            prepend-icon="phone"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.city"
-                            label="City"
-                            prepend-icon="mdi-map-marker"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.state"
-                            label="State"
-                            prepend-icon="mdi-map-marker"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.street"
-                            label="Street"
-                            prepend-icon="domain"
-                          ></v-text-field>
-                        </v-col>
-
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.password"
-                            label="Password"
-                            type="password"
-                            prepend-icon="lock"
-                          ></v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn fab color="error darken-1" @click="close">
-                      <v-icon dark> mdi-close </v-icon>
-                    </v-btn>
-                    <v-btn fab color="success darken-1" @click="save">
-                      <v-icon dark> mdi-floppy </v-icon>
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-
-              <v-dialog v-model="dialogDelete" max-width="500px">
-                <v-card>
-                  <v-card-title class="headline"
-                    >Are you sure you want to delete this item?</v-card-title
-                  >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="closeDelete"
-                      >Cancel</v-btn
-                    >
-                    <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                      >OK</v-btn
-                    >
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-toolbar>
-          </template>
-           -->
           <template v-slot:item.actions="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
@@ -183,22 +40,28 @@
 
 <script>
 import User from "../components/User";
+import Loader from "../components/Loader";
 
 export default {
   mounted() {
-    axios
+    this.isLoading = true;
+    window.axios
       .get("/api/user")
       .then((response) => {
         this.users = response.data;
       })
       .catch((error) => {
         console.error("There was an error!", error);
-      });
+      }).finally(()=>{
+        this.isLoading = false;
+      })
   },
   components: {
-    'user-modal': User,
+    "user-modal": User,
+    loader: Loader,
   },
   data: () => ({
+    isLoading:false,
     dialog: false,
     dialogDelete: false,
     menu: false,
@@ -269,6 +132,9 @@ export default {
   methods: {
     initialize() {
       this.users = [];
+    },
+    handleCreate(){
+      this.editedIndex = -1;
     },
 
     editItem(item) {

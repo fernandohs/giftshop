@@ -41,6 +41,7 @@ class UserUpdateRequest extends FormRequest
             "street"     => ['required'],
             "zip_code"   => ['required'],
             "email"      => ['required', 'unique:users,email,'. $this->id.",id"],
+            "is_admin"   => ['required', 'boolean'],
             "password"   => ['sometimes'],
         ];
     }

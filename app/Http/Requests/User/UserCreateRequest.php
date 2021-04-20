@@ -35,6 +35,7 @@ class UserCreateRequest extends FormRequest
             "street"     => ['required'],
             "zip_code"   => ['required'],
             "email"      => ['required', 'email', 'unique:users,email'],
+            "is_admin"   => ['required', 'boolean'],
             "password"   => ['required'],
         ];
     }

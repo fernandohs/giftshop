@@ -107,10 +107,22 @@
 
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
+                  v-model="user.zip_code"
+                  label="ZipCode"
+                  prepend-icon="domain"
+                  :rules="rules.zip_code"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
                   v-model="user.password"
                   label="Password"
                   type="password"
                   prepend-icon="lock"
+                  :rules="isAddForm ? rules.password : []"
+                  :required="isAddForm"
                 ></v-text-field>
               </v-col>
 
@@ -176,6 +188,8 @@ export default {
     },
     rules: {
       name: [(v) => !!v || "Name is required"],
+      zip_code: [(v) => !!v || "Zip Code is required"],
+      password: [(v) => !!v || "Password is required"],
       birth_date: [(v) => !!v || "BirthDate is required"],
       email: [
         (v) => !!v || "E-mail is required",
@@ -192,6 +206,9 @@ export default {
     formTitle() {
       return this.userIndex === -1 ? "New User" : "Edit User";
     },
+    isAddForm() {
+      return this.userIndex === -1;
+    },
   },
 
   watch: {
@@ -205,7 +222,6 @@ export default {
       val || this.closeDelete();
     },
     userIndex(val) {
-      console.log(val, this.userEdit);
       if (val > -1) {
         this.dialog = true;
         this.user = this.userEdit;
@@ -238,16 +254,16 @@ export default {
       this.dialog = false;
       //this.$nextTick(() => {
       this.user = Object.assign({}, this.defaultUser);
-      this.userIndex = -1;
+      this.$emit("created");
       //});
     },
 
     closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.user = Object.assign({}, this.defaultUser);
-        this.userIndex = -2;
-      });
+      // this.dialogDelete = false;
+      // this.$nextTick(() => {
+      //   this.user = Object.assign({}, this.defaultUser);
+      //   this.userIndex = -2;
+      // });
     },
     saveDate(date) {
       this.$refs.menu.save(date);
@@ -257,11 +273,33 @@ export default {
       if (!this.validate()) {
         return;
       }
-      if (this.editedIndex > -1) {
-        Object.assign(this.users[this.editedIndex], this.user);
-        console.log("UPDATE");
+
+      if (this.userIndex > -1) {
+        // Object.assign(this.users[this.editedIndex], this.user);
+        window.axios
+          .put(`/api/user/${this.user.id}`, this.user)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error("There was an error!", error);
+          })
+          .finally(() => {
+            // this.isLoading = false;
+          });
       } else {
-        console.log(this.user);
+        // this.isLoading = true;
+        window.axios
+          .post("/api/user", this.user)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error("There was an error!", error);
+          })
+          .finally(() => {
+            // this.isLoading = false;
+          });
       }
       //this.close();
     },
