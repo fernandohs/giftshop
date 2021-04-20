@@ -1,14 +1,14 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\UserRepository;
+use App\Repositories\ProductRepository;
 use App\Interfaces\IServices;
 
-class UserService implements IServices{
+class ProductService implements IServices{
 
     protected $repository;
     
-    public function __construct(UserRepository $repository){
+    public function __construct(ProductRepository $repository){
 
         $this->repository = $repository;
     }
@@ -34,4 +34,3 @@ class UserService implements IServices{
     }
 
 }
-

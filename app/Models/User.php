@@ -67,13 +67,6 @@ class User extends Authenticatable
         return Carbon::parse($this->birth_date)->format('d/m/Y');
     }
 
-
-    public function getBeginnerAttribute()
-    {
-        return $this->is_beginner === "1" ? "Si" : "No";
-    }
-
-
     public function tokenExpired()
     {
 
